@@ -14,7 +14,7 @@ const OrderItemListWrapper = styled.li`
 
 // TODO: background color GRAY-400
 const OrderList = () => {
-  const orderItemList = useSelector((state) => state.orderList.orderItemList);
+  const orderItemList = useSelector((state) => state.orderList.orderItemList.data);
 
   return (
     <>

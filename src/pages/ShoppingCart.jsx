@@ -58,7 +58,7 @@ const ShoppingCart = () => {
 
   const dispatch = useDispatch();
   const isChecked = useSelector((state) => state.shoppingCart.isAllShoppingCartItemChecked);
-  const shoppingCartList = useSelector((state) => state.shoppingCart.shoppingCartList);
+  const shoppingCartList = useSelector((state) => state.shoppingCart.shoppingCartList.data);
   const checkedShoppingCartList = shoppingCartList.filter((item) => item.isChecked);
 
   const totalPrice = getExpectedPaymentAmount(checkedShoppingCartList);

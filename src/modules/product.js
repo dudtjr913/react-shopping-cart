@@ -1,26 +1,33 @@
-const FETCH_PRODUCT_LIST = 'product/FETCH_PRODUCT_LIST';
+import { createAsyncThunk } from './utils/async';
+import { reducerUtils } from './utils/reducer';
+import { requestGetItemList } from './utils/request';
 
-export const fetchProductList = () => async (dispatch) => {
-  try {
-    const response = await fetch('http://localhost:4000/productList');
-    const productList = await response.json();
+const GET_PRODUCT_ITEM_LIST = 'product/GET_PRODUCT_ITEM_LIST';
+const GET_PRODUCT_ITEM_LIST_SUCCESS = 'product/GET_PRODUCT_ITEM_LIST_SUCCESS';
+const GET_PRODUCT_ITEM_LIST_FAILURE = 'product/GET_PRODUCT_ITEM_LIST_FAILURE';
 
-    dispatch({ type: FETCH_PRODUCT_LIST, payload: productList });
-  } catch (error) {
-    console.error(error);
-  }
-};
+export const fetchProductList = createAsyncThunk(GET_PRODUCT_ITEM_LIST, requestGetItemList.bind(null, 'productList'));
 
 const initialState = {
-  productList: [],
+  productList: reducerUtils.initial([]),
 };
 
 const product = (state = initialState, action) => {
   switch (action.type) {
-    case FETCH_PRODUCT_LIST:
+    case GET_PRODUCT_ITEM_LIST:
       return {
         ...state,
-        productList: action.payload,
+        productList: reducerUtils.loading([]),
+      };
+    case GET_PRODUCT_ITEM_LIST_SUCCESS:
+      return {
+        ...state,
+        productList: reducerUtils.success(action.payload),
+      };
+    case GET_PRODUCT_ITEM_LIST_FAILURE:
+      return {
+        ...state,
+        productList: reducerUtils.failure([], action.payload),
       };
     default:
       return state;
