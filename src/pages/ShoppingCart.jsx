@@ -60,7 +60,9 @@ const ShoppingCart = () => {
   const dispatch = useDispatch();
   const isChecked = useSelector((state) => state.shoppingCart.isAllShoppingCartItemChecked);
   const shoppingCartList = useSelector((state) => state.shoppingCart.shoppingCartList.data);
+
   const checkedShoppingCartList = shoppingCartList.filter((item) => item.isChecked);
+  const checkedCount = checkedShoppingCartList.length;
 
   const totalPrice = getExpectedPaymentAmount(checkedShoppingCartList);
 
@@ -70,12 +72,14 @@ const ShoppingCart = () => {
 
   // TODO: custom confirm 다이얼로그 만들기
   const handleCheckedShoppingCartListDelete = async () => {
-    if (!window.confirm(`${checkedShoppingCartList.length}개의 상품을 삭제하시겠습니까?`)) return;
+    if (!window.confirm(`${checkedCount}개의 상품을 삭제하시겠습니까?`)) return;
 
     dispatch(deleteCheckedShoppingCartList(checkedShoppingCartList));
   };
 
   const handleOrderPaymentPageRouter = () => {
+    if (!checkedCount) return;
+
     history.push(PATH.ORDER_PAYMENT, {
       orderPaymentList: checkedShoppingCartList,
       totalPrice,
@@ -108,7 +112,7 @@ const ShoppingCart = () => {
             <Button
               onClick={handleCheckedShoppingCartListDelete}
               type={BUTTON_TYPE.X_SMALL}
-              disabled={!checkedShoppingCartList.length}
+              disabled={checkedCount === 0}
             >
               상품삭제
             </Button>
@@ -124,7 +128,7 @@ const ShoppingCart = () => {
             <PaymentAmount
               type={PAYMENT_AMOUNT_TYPE.SHOPPING_CART}
               price={totalPrice}
-              count={checkedShoppingCartList.length}
+              count={checkedCount}
               onClick={handleOrderPaymentPageRouter}
             />
           </PaymentAmountWrapper>
